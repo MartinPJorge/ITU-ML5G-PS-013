@@ -1,0 +1,14 @@
+grep -n -oE "[0-9]-" output-simulator/*
+output-simulator/script_output_sce1a.txt:228:5-
+output-simulator/script_output_sce1a.txt:228:2-
+output-simulator/script_output_sce1c.txt:388:9-
+output-simulator/script_output_sce1c.txt:388:3-
+
+as well in script_output_sce1b.txt
+has same problem, and scenario 0028 (line ~452) misses x2 RSSI values of
+the last stations. We filled them with the last reported RSSI value
+of -64.17dB
+
+same happens for sce1a_013, and sce1c_024;
+both missed two values in the RSSI list, and were filled as above
+
