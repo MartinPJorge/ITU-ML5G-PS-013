@@ -95,7 +95,6 @@ if __name__ == '__main__':
                             (scenario_in['wlan_code'] == ap)]
 
                     # RSSI quantiles of the attached STAs
-                    print(stas.index)
                     rssis = [scenario_out['rssi'][st_idx]\
                              for st_idx in stas.index]
                     q1_rssi = np.quantile(rssis, 0.25)
@@ -165,6 +164,10 @@ if __name__ == '__main__':
                         for ch in range(8):
                             sta_rows[st_key][f'channel_{ch}_interference'] =\
                                     per_channel_interference[ch]
+
+                        # STA throughput
+                        sta_rows[st_key]['throughput'] =\
+                                scenario_out['throughput'][index]
 
         # Create and store the data-set
         new_df = pd.DataFrame.from_dict(sta_rows, orient='index')
