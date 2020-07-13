@@ -19,23 +19,24 @@
 
 set -o nounset                              # Treat unset variables as an error
 
-if [ $# -ne 1 ]; then
-    echo "specify directory"
+if [ $# -ne 2 ]; then
+    echo "specify in-directory out-directory"
     exit 1
 fi
 
-out_dir=$1
+in_dir=$1
+out_dir=$2
 
 
-for f in `ls output-simulator`; do
-    for l in `grep -n "KOMONDOR" output-simulator/$f | grep -oE "^[0-9]+"`; do
+for f in `ls $in_dir`; do
+    for l in `grep -n "KOMONDOR" "$in_dir/$f" | grep -oE "^[0-9]+"`; do
 
         tail_l=16 # scenario 1 has 16 lines per scenario
         if [[ `echo $f | grep "sce2"` ]]; then
             tail_l=12 # scenario 2 has 12 lines per scenario
         fi
 
-        tail --lines=+$l output-simulator/$f | head -n$tail_l &> /tmp/sc.txt
+        tail --lines=+$l "$in_dir/$f" | head -n$tail_l &> /tmp/sc.txt
     
         # Obtain the file name for the scenario
         sc_name=`head -n1 /tmp/sc.txt | grep -oE "[a-z0-9_]+\.csv"`
