@@ -7,8 +7,9 @@ import pandas as pd
 import numpy as np
 import json
 
-INPUT_DIR='input-node-files'
-OUT_PARSED_DIR='output-simulator-parsed'
+# INPUT_DIR='input-node-files'
+# OUT_PARSED_DIR='output-simulator-parsed'
+
 # original set of columns to use
 COLUMNS_0=['primary_channel_neighs', 'primary_channel_0', 'primary_channel_1',
         'primary_channel_2', 'primary_channel_3', 'primary_channel_4',
@@ -96,11 +97,30 @@ COLUMNS_7=['primary_channel_neighs', 'primary_channel_0', 'primary_channel_1',
         'channel_5_interference', 'channel_6_interference',
         'channel_7_interference', 'throughput']
 
+#################################
+# COLUMN COMBINATIONS WITH SINR #
+#################################
+
+COLUMNS_10=['primary_channel_neighs', 'primary_channel_0', 'primary_channel_1',
+        'primary_channel_2', 'primary_channel_3', 'primary_channel_4',
+        'primary_channel_5', 'primary_channel_6', 'primary_channel_7',
+        'allowed_channel_0', 'allowed_channel_1', 'allowed_channel_2',
+        'allowed_channel_3', 'allowed_channel_4', 'allowed_channel_5',
+        'allowed_channel_6', 'allowed_channel_7', 
+        'sinr','q1_sinr', 'q2_sinr', 'q3_sinr', 'q4_sinr',
+        'rssi', 'q1_rssi', 'q2_rssi',
+        'q3_rssi', 'q4_rssi', 'agg_interference', 'channel_0_interference',
+        'channel_1_interference', 'channel_2_interference',
+        'channel_3_interference', 'channel_4_interference',
+        'channel_5_interference', 'channel_6_interference',
+        'channel_7_interference', 'throughput']
+
 COLUMNS=COLUMNS_0
 LABEL=COLUMNS[-1]
 
 
 if __name__ == '__main__':
+    global INPUT_DIR, OUT_PARSED_DIR 
     parser = argparse.ArgumentParser()
     parser.add_argument('batch', help="batch size ", type=int,
                         default=30)
@@ -111,6 +131,10 @@ if __name__ == '__main__':
     parser.add_argument('--dataset', help="path to csv with build dataset",
                         type=str)
     parser.add_argument('--new_dataset', help="path to csv with new dataset",
+                        type=str)
+    parser.add_argument('--input_dir', help="path to dir with input data",
+                        type=str)
+    parser.add_argument('--parsed_output_dir', help="path dir with parsed out",
                         type=str)
     parser.add_argument('--model', help="path to NN model",
                         type=str)
@@ -124,6 +148,10 @@ if __name__ == '__main__':
         if not args.new_dataset:
             print('Please specify the new dataset path')
             sys.exit(1)
+        if not args.input_dir or not args.parsed_output_dir:
+            print('Please specify input and output directories')
+        INPUT_DIR = args.input_dir
+        OUT_PARSED_DIR = args.parsed_output_dir
 
         print('Creating the dataset')
         sta_rows = {
@@ -144,6 +172,14 @@ if __name__ == '__main__':
                     #    q2_rssi: np.quantile(ap_rssis, 0.5)
                     #    q3_rssi: np.quantile(ap_rssis, 0.75)
                     #    q4_rssi: np.quantile(ap_rssis, 1)
+                    #
+                    #    sinr: -30dB
+                    #
+                    #    q1_sinr: np.quantile(ap_sinrs, 0.25)
+                    #    q2_sinr: np.quantile(ap_sinrs, 0.5)
+                    #    q3_sinr: np.quantile(ap_sinrs, 0.75)
+                    #    q4_sinr: np.quantile(ap_sinrs, 1)
+                    #
                     #
                     #    agg_interference: the overall interference of AP
                     #
@@ -212,6 +248,14 @@ if __name__ == '__main__':
                     q3_rssi = np.quantile(rssis, 0.75)
                     q4_rssi = np.quantile(rssis, 1)
 
+                    # SNIR quantiles of the attached STAs
+                    sinrs = [scenario_out['sinr'][st_idx]\
+                             for st_idx in stas.index]
+                    q1_sinr = np.quantile(sinrs, 0.25)
+                    q2_sinr = np.quantile(sinrs, 0.5)
+                    q3_sinr = np.quantile(sinrs, 0.75)
+                    q4_sinr = np.quantile(sinrs, 1)
+
                     # AP overall interference
                     agg_interference =\
                         sum(scenario_out['interference'][map_idx[ap_idx]])
@@ -277,6 +321,15 @@ if __name__ == '__main__':
                         sta_rows[st_key]['q2_rssi'] = q2_rssi
                         sta_rows[st_key]['q3_rssi'] = q3_rssi
                         sta_rows[st_key]['q4_rssi'] = q4_rssi
+
+                        # The STA SINR level
+                        sta_rows[st_key]['sinr'] = scenario_out['sinr'][index]
+
+                        # The SINRs quantiles of neighboring nodes
+                        sta_rows[st_key]['q1_sinr'] = q1_sinr
+                        sta_rows[st_key]['q2_sinr'] = q2_sinr
+                        sta_rows[st_key]['q3_sinr'] = q3_sinr
+                        sta_rows[st_key]['q4_sinr'] = q4_sinr
 
                         # Aggregated interferences
                         sta_rows[st_key]['agg_interference'] = agg_interference

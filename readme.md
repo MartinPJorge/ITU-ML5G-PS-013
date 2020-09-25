@@ -22,7 +22,7 @@ This repository already contains the dataset provided at:
 ## Processing procedure
 By running
 ```bash
-./extract-outputs.sh output-simulator output-simulator-parsed/
+./extract-outputs.sh output-simulator output-simulator-parsed/ 0
 ```
 we parse the TXT files under `output-simulator` and store in a JSON the output
 of each scenario.
@@ -34,6 +34,13 @@ During the parsing of the data, we encountered the following errors:
 
 The refered files are sanitized as indicated in this repository.
 
+### v4 data
+`input-node-files-v4` and `output-node-files-v4` contain the dataset
+files version 4.
+Such files contain the *SINR* of the STAs, therefore they need
+a different processing.
+It is enough to change 0 to 1 in the flag passed as last argument
+to `./extract-outputs.sh`.
 
 # Gossip
 The `gossip.py` solution creates a dataset `gossip-dataset.csv` with
@@ -76,6 +83,11 @@ The columns present are the following (as idx is the STA identifier):
 | q2_rssi | 2st quantile of neighbors RSSI to the AP |
 | q3_rssi | 3st quantile of neighbors RSSI to the AP |
 | q4_rssi | 4st quantile of neighbors RSSI to the AP |
+| sinr | SINR level of AP giving connection |
+| q1_sinr | 1st quantile of neighbors SINR to the AP |
+| q2_sinr | 2st quantile of neighbors SINR to the AP |
+| q3_sinr | 3st quantile of neighbors SINR to the AP |
+| q4_sinr | 4st quantile of neighbors SINR to the AP |
 | agg_interference | aggregated interference perceived by the AP |
 | channel_0_interference | interference perceived by the AP in channel 0 |
 | channel_1_interference | interference perceived by the AP in channel 1 |
@@ -93,10 +105,14 @@ Using the output JSONs extracted to `output-simulator-parsed/`, and the input
 files present under `input-node-files/`; we can create a dataset to feed the
 Gossip solution:
 ```bash
-python3 gossip.py 50 --new_dataset gossip-dataset.csv
+python3 gossip.py 50 \
+    --new_dataset gossip-dataset-v4.csv\
+    --input_dir input-node-files-v4\
+    --parsed_output_dir output-simulator-v4-parsed
 ```
-This is how it was created the `gossip-dataset.csv` in this repo
+This is how it was created the `gossip-dataset-v4.csv` in this repo
 (ignore the 50 parameter).
+
 
 ## Train a Gossip model
 To train a Gossip model you have to execute the following line:
