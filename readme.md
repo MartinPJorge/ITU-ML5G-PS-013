@@ -190,3 +190,55 @@ A 106.98 74.58921813964844
 [...]
 L 83.11 73.48725891113281
 ```
+
+
+
+# Test data
+The contest test data is inside `input-node-files-test`, and
+`output-simulator-test` directories; with the simulator input/output data
+respectively.
+
+First of all we need to **parse output** data using
+```bash
+
+rm -rf output-simulator-test-parsed/*json; # remove previous versions
+./extract-test-outputs.sh "output-simulator-test/*" output-simulator-test-parsed
+
+```
+this will generate all the parsed outputs in `.json` files under
+`output-simulator-test-parsed` directory.
+
+## create test gossip dataset
+One the output files are parsed in the expected `.json` format, a new dataset
+must be created to perform predictions:
+```bash
+python3 gossip.py 50 --new_dataset gossip-dataset-test.csv\
+    --input_dir input-node-files-test\
+    --parsed_output_dir output-simulator-test-parsed
+```
+and we obtain the `gossip-dataset-test.csv` to derive the predictions of
+all scenarios at once.
+
+
+
+## derive all predictions
+Once the dataset for the test is created, the user may execute
+```bash
+./forecast-all.sh "input-node-files-test/*"\ # parsed test input
+    output-simulator-test-parsed\            # parsed test output
+    /tmp/gossip-trained-model-v4\            # TF trained model
+    /tmp/predictions                         # directory with predictions
+```
+and the user will find under `/tmp/predictions` the forecasted
+throughput of both STAs and APs of every deployment:
+```txt
+/tmp/predictions
+├── test_1
+│   ├── all_throughput_000.csv
+│   ├── stas_throughput_000.csv
+│   ├── throughput_000.csv
+└── test_2
+      ...
+```
+with the last 2 containing both STAs, and APs througput; respectively.
+

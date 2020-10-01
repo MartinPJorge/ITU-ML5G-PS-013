@@ -115,7 +115,11 @@ COLUMNS_10=['primary_channel_neighs', 'primary_channel_0', 'primary_channel_1',
         'channel_5_interference', 'channel_6_interference',
         'channel_7_interference', 'throughput']
 
-COLUMNS=COLUMNS_0
+COLUMNS_11=['primary_channel_neighs', 'primary_channel_0', 'primary_channel_1',
+        'sinr','rssi', 'agg_interference', 'channel_0_interference',
+        'throughput']
+
+COLUMNS=COLUMNS_11
 LABEL=COLUMNS[-1]
 
 
@@ -222,7 +226,7 @@ if __name__ == '__main__':
                     scenario_out = json.load(f)
 
                 # Obtain both the scenario and #deployment
-                scenario = re.search(r'sce\d+[a-z]', file)[0]
+                scenario = re.search(r'sce\d+[a-z]*', file)[0]
                 deployment = re.search(r'\d+\.csv', file)[0].split('.')[0]
 
 
@@ -340,8 +344,12 @@ if __name__ == '__main__':
                                     per_channel_interference[ch]
 
                         # STA throughput
-                        sta_rows[st_key]['throughput'] =\
-                                scenario_out['throughput'][index]
+                        if 'throughput' in scenario_out: # test dataset has no
+                                                          # throughput
+                            sta_rows[st_key]['throughput'] =\
+                                    scenario_out['throughput'][index]
+                        else: # test dataset
+                            sta_rows[st_key]['throughput'] = 0
 
         # Create and store the data-set
         new_df = pd.DataFrame.from_dict(sta_rows, orient='index')
