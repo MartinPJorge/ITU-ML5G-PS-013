@@ -121,10 +121,11 @@ COLUMNS_11=['primary_channel_neighs', 'primary_channel_0', 'primary_channel_1',
 
 COLUMNS=COLUMNS_11
 LABEL=COLUMNS[-1]
+SHUFFLE=True
 
 
 if __name__ == '__main__':
-    global INPUT_DIR, OUT_PARSED_DIR 
+    global INPUT_DIR, OUT_PARSED_DIR
     parser = argparse.ArgumentParser()
     parser.add_argument('batch', help="batch size ", type=int,
                         default=30)
@@ -471,21 +472,21 @@ if __name__ == '__main__':
         # Loss of 23.9611 after 50 episodes, batch=32 - RMSprop
         # Loss of 23.1937 after 50 episodes, batch=50 - RMSprop
         # Loss of 23.5262 after 50 episodes, batch=100 - RMSprop
-        model = tf.keras.Sequential([
-          tf.keras.layers.Dense(5*len(COLUMNS)-1, activation=tf.nn.relu,
-                                input_shape=(len(COLUMNS)-1,)),  # input shape required
-          tf.keras.layers.Dense(5*len(COLUMNS)-1, activation=tf.nn.relu),
-          tf.keras.layers.Dense(1)
-        ])
-
-        # Loss of 23.9577 after 50 episodes, batch=32
         ## model = tf.keras.Sequential([
-        ##   tf.keras.layers.Dense(len(COLUMNS)-1, activation=tf.nn.relu,
+        ##   tf.keras.layers.Dense(5*len(COLUMNS)-1, activation=tf.nn.relu,
         ##                         input_shape=(len(COLUMNS)-1,)),  # input shape required
-        ##   tf.keras.layers.Dense(len(COLUMNS)-1, activation=tf.nn.relu),
-        ##   tf.keras.layers.Dense(len(COLUMNS)-1, activation=tf.nn.relu),
+        ##   tf.keras.layers.Dense(5*len(COLUMNS)-1, activation=tf.nn.relu),
         ##   tf.keras.layers.Dense(1)
         ## ])
+
+        # Loss of 23.9577 after 50 episodes, batch=32
+        model = tf.keras.Sequential([
+          tf.keras.layers.Dense(len(COLUMNS)-1, activation=tf.nn.relu,
+                                input_shape=(len(COLUMNS)-1,)),  # input shape required
+          tf.keras.layers.Dense(len(COLUMNS)-1, activation=tf.nn.relu),
+          tf.keras.layers.Dense(len(COLUMNS)-1, activation=tf.nn.relu),
+          tf.keras.layers.Dense(1)
+        ])
 
         # Loss of 23.7363 after 50 episodes, batch=32
         ## model = tf.keras.Sequential([
@@ -520,7 +521,8 @@ if __name__ == '__main__':
         train_dataset_fp = args.dataset if args.dataset else args.new_dataset
         df = pd.read_csv(train_dataset_fp)
         df = df[COLUMNS] # retain only interesting columns
-        df = df.sample(frac=1) # shuffle the dataframe
+        if SHUFFLE:
+            df = df.sample(frac=1) # shuffle the dataframe
         # 0.8-train, 0.2-test
         df_train = df.iloc[:, :int(0.8*len(df))]
         df_test = df.iloc[:, int(0.8*len(df)):]
