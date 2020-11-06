@@ -1,0 +1,165 @@
+set style line 1 lc "#4285f4" lw 2 pt 6 ps 0.5 # google blue
+set style line 2 lc "#ea4335" lw 2 pt 7 ps 0.5 # google red
+
+set xlabel font ", 24" offset 0,-1
+set ylabel font ", 24" offset -3
+set ytic font   ", 24"
+set key font    ", 24"
+
+
+# STA sce1a
+set term eps
+set output "/tmp/sta-sce1a-dep080-results.eps"
+set xlabel "STA"
+set ylabel "throughput [Mbps]"
+set xtic format ""
+unset xtic
+set yrange [-1:]
+set grid y
+set key top left box
+plot "/tmp/sta-sce1a-dep080-results.csv" u :2 w lp ls 1 t "real",\
+ "/tmp/sta-sce1a-dep080-results.csv" u :3 w lp ls 2 t "Gossip"
+
+# STA sce1b
+set term eps
+set output "/tmp/sta-sce1b-dep080-results.eps"
+set xlabel "STA"
+set ylabel "throughput [Mbps]"
+set xtic format ""
+unset xtic
+set yrange [-1:]
+set grid y
+set key top left box
+plot "/tmp/sta-sce1b-dep080-results.csv" u :2 w lp ls 1 t "real",\
+ "/tmp/sta-sce1b-dep080-results.csv" u :3 w lp ls 2 t "Gossip"
+
+
+# STA sce1c
+set term eps
+set output "/tmp/sta-sce1c-dep080-results.eps"
+set xlabel "STA"
+set ylabel "throughput [Mbps]"
+set xtic format ""
+unset xtic
+set yrange [-1:]
+set grid y
+set key top left box
+plot "/tmp/sta-sce1c-dep080-results.csv" u :2 w lp ls 1 t "real",\
+ "/tmp/sta-sce1c-dep080-results.csv" u :3 w lp ls 2 t "Gossip"
+
+# STA sce2a
+set term eps
+set output "/tmp/sta-sce2a-dep080-results.eps"
+set xlabel "STA"
+set ylabel "throughput [Mbps]"
+set xtic format ""
+unset xtic
+set yrange [-1:]
+set grid y
+set key top left box
+plot "/tmp/sta-sce2a-dep080-results.csv" u :2 w lp ls 1 t "real",\
+ "/tmp/sta-sce2a-dep080-results.csv" u :3 w lp ls 2 t "Gossip"
+
+# STA sce2b
+set term eps
+set output "/tmp/sta-sce2b-dep080-results.eps"
+set xlabel "STA"
+set ylabel "throughput [Mbps]"
+set xtic format ""
+unset xtic
+set yrange [-1:]
+set grid y
+set key top left box
+plot "/tmp/sta-sce2b-dep080-results.csv" u :2 w lp ls 1 t "real",\
+ "/tmp/sta-sce2b-dep080-results.csv" u :3 w lp ls 2 t "Gossip"
+
+# STA sce2c
+set term eps
+set output "/tmp/sta-sce2c-dep080-results.eps"
+set xlabel "STA"
+set ylabel "throughput [Mbps]"
+set xtic format ""
+unset xtic
+set yrange [-1:]
+set grid y
+set key top left box
+plot "/tmp/sta-sce2c-dep080-results.csv" u :2 w lp ls 1 t "real",\
+ "/tmp/sta-sce2c-dep080-results.csv" u :3 w lp ls 2 t "Gossip"
+
+
+
+
+
+######
+# APs
+######
+#
+set style data histogram
+set style fill solid border -1
+set boxwidth 1
+set xtic font ", 24" offset 0,-0.5
+set xlabel offset 0,-2
+set yrange [0:]
+#
+
+# sce1a
+set term eps
+set output "/tmp/aps-sce1a-dep080-results.eps"
+set xlabel "AP"
+set ylabel "throughput [Mbps]"
+set grid y
+set key top left box
+plot "/tmp/aps-sce1a-dep080-results.csv" u 2:xtic(1) ti col ls 1 ,\
+ "" u 3:xtic(1) ti col ls 2
+
+# sce1b
+set term eps
+set output "/tmp/aps-sce1b-dep080-results.eps"
+set xlabel "AP"
+set ylabel "throughput [Mbps]"
+set grid y
+set key top left box
+plot "/tmp/aps-sce1b-dep080-results.csv" u 2:xtic(1) ti col ls 1 ,\
+ "" u 3:xtic(1) ti col ls 2
+
+# sce1c
+set term eps
+set output "/tmp/aps-sce1c-dep080-results.eps"
+set xlabel "AP"
+set ylabel "throughput [Mbps]"
+set grid y
+set key top left box
+plot "/tmp/aps-sce1c-dep080-results.csv" u 2:xtic(1) ti col ls 1 ,\
+ "" u 3:xtic(1) ti col ls 2
+
+# sce2a
+set term eps
+set output "/tmp/aps-sce2a-dep080-results.eps"
+set xlabel "AP"
+set ylabel "throughput [Mbps]"
+set grid y
+set key top left box
+plot "/tmp/aps-sce2a-dep080-results.csv" u 2:xtic(1) ti col ls 1 ,\
+ "" u 3:xtic(1) ti col ls 2
+
+# sce2b
+set term eps
+set output "/tmp/aps-sce2b-dep080-results.eps"
+set xlabel "AP"
+set ylabel "throughput [Mbps]"
+set grid y
+set key top left box
+plot "/tmp/aps-sce2b-dep080-results.csv" u 2:xtic(1) ti col ls 1 ,\
+ "" u 3:xtic(1) ti col ls 2
+
+# sce2c
+set term eps
+set output "/tmp/aps-sce2c-dep080-results.eps"
+set xlabel "AP"
+set ylabel "throughput [Mbps]"
+set grid y
+set key top left box
+plot "/tmp/aps-sce2c-dep080-results.csv" u 2:xtic(1) ti col ls 1 ,\
+ "" u 3:xtic(1) ti col ls 2
+
+
